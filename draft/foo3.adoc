@@ -1,0 +1,393 @@
+= Processus de Poisson et Files d'Attente
+Probabilités & Statistiques | L2 | 2O17/2O18
+:sectnums:
+:b: $\:\cB\:$
+:u: $\:\gO\:$
+:w: $\:\go\:$
+:axiom: $\:\Large{\mathbb A}\:$
+:def: $\huge{\triangleq}$
+:prop: $\Large{\mathcal{P}}$
+:eg: $\Large{\mathcal{eg}}$
+:nota: $\huge{i}$
+:formula: $\huge{\phi}$
+:theorem: $\huge{\top}$
+:proof: $\huge{\square}$
+:va: variable aléatoire
+:vad: {va} discrète
+:cad: c'est-à-dire
+:sigma: $\:\gs\:$
+:lam: $\:\gl\:$
+:mu: $\H{\mu}$
+:dt: $\H{\dt}$
+:arr: $\H{\longrightarrow}$
+:toc:
+
+include_latex_macros::m.tex[]
+
+== Processus de Poisson
+
+[horizontal]
+{def}::
+On suppose que l'on a des "succès" arrivant de manière aléatoire
+  mutuellement indépendants avec une densité de probabilité $\gl(t)$.
+  On suppose que pour un $\:\dt\:$ suffisamment la probabilité d'un succès
+  entre $\:t\:$ et $\:t+\dt\:$ est $\:{\gl \dt}\:$ , et que la probabilité de deux succès
+  ou plus dans le même intervalle est négligeable devant $\:\dt\:$ au
+  voisinage de $\:0\:$ . On suppose qu'un succès ne peut pas
+  "disparaître" une fois qu'il a eu lieu.
+  On considère la {vad} $\:N_t\:$ du "nombre de succès" enregistrés sur
+  $\:\{0,t\}\:$ $\:{
+
+\On \pose %{p_n(t) := \P(N_t = n) \ss \all t \geq 0 \ss \all n \in \sN} _ +
+\En %t=0 , %N_0=0 , \donc %p_0(0)=1 \et
+  %{p_n(0) = 0 \ss \all n \gt 0} _
+
+\On \va \calculer %p_n(\tdt) \en \fonction \des %p_n(t) _ %N_\tdt=n \est \possible
+\dans l'\un \des \trois \cas \suivants : +
+%- \aucun \succès \entre $\H\{t\}$ \et $\H\{\t\dt\}$ \{\arr\} $\H\{N.t = n\}$_ +
+%- \un \succès \entre $\H\{t\}$ \et $\H\{\t\dt\}$ \{\arr\} $\H\{N.t = n - 1\}$_ +
+%- $\H\{k\}$ \succès \entre $\H\{t\}$ \et $\H\{\t\dt\}$ \{\arr\} $\H\{N.t = n - k\}$_
+
+\On \utilise \la *\formule \des \probabilités \totales* :
+%___
+  \begin{align}
+  p_n(\tdt)
+    & = \sum^n_0 \P(N_{\tdt} = n | N_t = n - k) \P(N_t = n - k) \\
+    & = (1 - \gl \dt - o(\dt)) p_n(t) + \gl \dt p_{n-1}(t) + o(\dt)
+      \sum^n_2 p_{n-k}(t) \\
+  \frac {p_n(\tdt)-p_n(t)} \dt
+    & = - \gl p_n(t) + \gl p_{n-1}(t) + o(1) \\
+  p'_n(t) & = - \gl p_n(t) + \gl p_{n-1}(t)
+  \end{align}
+___%
+\[
+  \b\egin\{\align\}
+  p.n(\t\dt)
+    & = \s\um^n.0 \P(N.\{\t\dt\} = n | N.t = n - k) \P(N.t = n - k) \\
+    & = (1 - \gl \dt - o(\dt)) p.n(t) + \gl \dt p.\{n-1\}(t) + o(\dt)
+      \s\um^n.2 p.\{n - k\}(t) \\
+  \f\rac\{p.n(\t\dt) - p.n(t)\}\{\dt\}
+    & = - \gl p.n(t) + \gl p.\{n-1\}(t) + o(1) \\
+  p'.n(t) & = - \gl p.n(t) + \gl p.\{n-1\}(t)
+  \e\nd\{\align\}
+\]
+\Le \cas \spé\cial \de $\H\{n = 0\}$ :
+\[
+  \b\egin\{\align\}
+  p.0(\t\dt) & = (1 - \gl \dt - o(\dt)) p.0(t) \\
+  p'.0(t) & = - \gl p.0(t)
+  \e\nd\{\align\}
+\]
+d'où \le \systè\me d'é\quations \diffé\rentielles \suivant :
+\[
+  \b\egin\{\cases\}
+  p'.0 = - \gl p.0 \q\quad (S^0) \\
+  p'.n = - \gl p.n + \gl p.\{n-1\} \q\quad (S^n) \ss \a\ll n \gt 0 \\
+  p.0(0) = 1 \\
+  p.n(0) = 0 \ss \a\ll n \gt 0
+  \e\nd\{\cases\}
+\]
+\La ré\solution \donne \successivement:
+\[
+  p.0 = C.0 e^\{-\gl t\} \ss C.0 = 1 \t\xt\{\car\} p.0(0) = 1
+    \t\xt\{\donc\} p.0 = e^\{-\gl t\} =
+    \f\rac\{(\gl t)^\{0\}\}\{0!\} e^\{-\gl t\}
+\]
+\[
+  p.1 = C.1 e^\{-\gl t\} \ss p'.1 = C'.1 e^\{-\gl t\} - \gl p.1
+\]
+\en \injectant \cela \dans $\H\{(S^1)\}$ \il \vient :
+\[
+  C'.1 e^\{-\gl t\} = \gl p.0 = \gl e^\{-\gl t\}
+  \t\xt\{\donc\} C.1 = \gl t \ss p.1 = \gl t e^\{-\gl t\}
+    = \f\rac\{(\gl t)^\{1\}\}\{1!\} e^\{-\gl t\}
+\]
+\Par ré\currence :
+\[
+  C'.n e^\{-\gl t\} = \gl p.\{n-1\} =
+    \gl \f\rac\{(\gl t)^\{n-1\}\}\{(n-1)!\} e^\{-\gl t\}
+\]
+\[
+  C.n = \f\rac\{(\gl t)^\{n\}\}\{n!\} \t\xt\{\donc\}
+    p.n(t) = \P(N.t = n) = \f\rac\{(\gl t)^\{n\}\}\{n!\} e^\{-\gl t\}
+\]
+\[
+  \a\ll t \ss N.t \s\im \fP(\gl t)
+\]
+
+{\horizontal}
+\{\nota\}::
+$\H\{-\}$ \Le \processus \est *\sans mé\moire* : \ce \qui \se \passe \sur
+  $\H\{{a, b\]\}$ n'a \pas d'\influence \sur \ce \qui \se \passe \sur
+  $\H\{{c, d\]\}$, \pour $\H\{b < c\}$_ +
+$\H\{-\}$ \Si l'\on \considè\re $\H\{t.0 > 0\}$ \quelconque, \et \si \on
+  s'\inté\resse à $\H\{N(t) - N(t.0)\}$, \{\cad\} \le *\nombre
+  \de \succès \dans l'\intervalle $\H\{\]t.0,\:$ t\]}$*, on obtient les
+  mêmes équations différentielles :
+  $\H{N_t - N_{t_0} \sim \fP(\gl (t - t_0))}$.
+  L'espérance est $\H{\gl (t - t_0)}$ : $\H{\gl}$ est donc
+  le *nombre moyen de succès par unités de temps*. +
+$\H{-}$ On peut calculer le *temps d'attente $\H{T}$
+  d'un premier succès*. Le temps d'attente est supérieur à $\H{t}$
+  ssi on n'a encore enregistré aucun succès au temps $\H{t}$:
+\[
+  P(T \gt t) = P(N_t = 0) = p_0(t) = e^{-\gl t}
+\]
+Fonction de répartition de $\H{T}$:
+\[
+  F_T =
+  \begin{cases}
+    1 - e^{-\gl t} & \txt{si} t \geq 0 \\
+    0 & \txt{sinon}
+  \end{cases}
+\]
+On a bien $\H{F_T(+\infty) = 1}$. La densité de probabilité de $\H{T}$
+  est donc $\H{F'_T = \gl e^{-\gl t} \ss t > 0}$, donc
+  $\H{T \sim \mathscr{E}(\gl)}$ et donc $\H{\E(T) = \cifrac{\gl}}$.
+
+//_
+== Graphe de Transition d'un Processus de Poisson
+
+[horizontal]
+{def}::
+On dira que le processus est *dans l'état $\H{n}$ à l'instant $\H{t}$*
+  si $\H{N_t = n}$.
+
+{empty} +
+{empty} +
+{empty} +
+{empty}
+
+Les flèches partant toutes d'un même état doivent avoir des probabilités
+  dont la somme vaut 1.
+
+
+== File D'Attente (exemple)
+
+[horizontal]
+{def}::
+Il y a un *guichet* qui sert des clients. Le guichet ne traite qu'une
+  personne à la fois. L'arrivée et le départ des clients dans
+  la *file d'attente* sont supposés être deux Processus de Poisson
+  de paramètres {lam} et {mu}. +
+Les clients *arrivent et repartent aléatoirement* et de manière
+  *indépendante*, indépendamment de $\H{t}$. +
+Tout probabilité en $\H{(\dt)^2}$ (départ et arrivée simultanés,
+  $\H{n}$ départs ou arrivées simultanés, $\H{n > 1}$) est supposée
+  négligeable. +
+Graphe de transition de la file d'attente :
+
+{empty} +
+{empty} +
+{empty} +
+{empty}
+
+== Loi de la Longueur de la File
+
+[horizontal]
+{def}::
+$\H{-}$ $\H{N(t)}$ désigne le *nombre de clients dans la file
+  à l'instant $\H{t}$*. +
+$\H{-}$
+  $\H{p_n(t) := \P(N(t) = n) \ss \all t \geq 0 \ss \all n \in \sN}$ +
+
+A partir du graphe de transition, pour $\H{n \neq 0}$ : +
+$\H{\P(N(\tdt) = n | N(t) = n) = 1 - \gl \dt - \mu \dt}$ +
+$\H{\P(N(\tdt) = n | N(t) = n - 1) = \gl \dt}$ +
+$\H{\P(N(\tdt) = n | N(t) = n + 1) = \mu \dt}$ +
+Donc :
+\[
+  p_n(\tdt) = \gl \dt p_{n-1}(t) + \mu \dt p_{n+1}(t)
+      + (1 - \gl \dt - \mu \dt)p_n(t)
+\]
+\[
+  p'_n = \gl p_{n-1} + \mu p_{n+1}
+      - (\gl + \mu)p_n
+\]
+Et pour $\H{n = 0}$ :
+\[
+  p_0(\tdt) = \mu \dt p_1(t)
+      + (1 - \gl \dt)p_0(t)
+\]
+\[
+  p'_0 = \mu p_1
+      - \gl p_0
+\]
+\[
+  \begin{cases}
+  \mu p_1 - \gl p_0 = p'_0 & \qquad (S^0) \\
+  \mu p_{n+1} - \gl p_n = p'_n + \mu p_{n} - \gl p_{n-1}
+      & \qquad (S^n) \ss \all n \gt 0
+  \end{cases}
+\]
+On obtient un système trop complexe dans le cas général. On
+  peut cependant trouver les solutions constantes, pour lesquelles
+  les $\H{p_i}$ sont des fonctions constantes, et donc pour lesquelles
+  $\H{p'_i = 0}$ :
+\[
+  \begin{cases}
+  \mu p_1 - \gl p_0 = 0  & \qquad (S^0) \\
+  \mu p_2 - \gl p_1 = \mu p_1 - \gl p_0
+      & \qquad (S^1) \\
+  \mu p_{n+1} - \gl p_n = \mu p_n - \gl p_{n-1}
+      & \qquad (S^n) \ss \all n \gt 0
+  \end{cases}
+\]
+D'où :
+\[
+  p_{n+1} = \frac{\gl}{\mu} p_n = \frac{\gl^{n+1}}{\mu^{n+1}} p_0
+\]
+La condition
+  $\H{\sum p_i = p_0 \sum \left ( \cfrac{\gl}{\mu} \right ) ^k = 1}$
+  permet de déduire que nécessairement $\H{\gl < \mu}$,
+  et surtout : $\H{\cfrac{p_0}{1 - \gl / \mu}} = 1$ d'où
+  $\H{p_0 = 1 - \cfrac{\gl}{\mu}}$ et finalement :
+\[
+  \all t \geq 0 \ss \all n \geq 0 \ss
+  p_n = \P(N(t) = n) =
+  \left ( \frac{\gl}{\mu} \right ) ^n
+  \left ( 1 - \frac{\gl}{\mu} \right )
+\]
+
+[horizontal]
+{theorem}::
+*Loi de la longueur L = N(t) de la file d'attente en régime
+  stationnaire* : +
+$\H{-}$ Si $\H{\gl \geq \mu}$, la file d'attente
+  s'allonge indéfiniment. +
+$\H{-}$ Sinon,
+  $\H{\P(L = n) = \left( \cfrac{\gl}{\mu} \right) ^n \left( 1 - \cfrac{\gl}{\mu} \right) \ss \all n \in \sN }$ +
+Dans ce cas-là, on remarque que
+  $\H{1 + L \sim \mathscr{G}\left( 1 - \cfrac{\gl}{\mu} \right)}$. +
+D'où :
+\[
+  \E(1 + L) =
+  1 + \E(L) =
+  \ifrac{
+    1 - \frac{\gl}{\mu}
+  }
+  \txt{donc}
+  \E(L) = \ifrac{
+    1 - \frac{\gl}{\mu}
+  } - 1
+  = \frac{\gl / \mu}{
+    1 - \frac{\gl}{\mu}
+  } =
+  \frac{\gl}{\mu - \gl}
+\]
+
+== Temps Moyen d'Attente
+
+[horizontal]
+{theorem}::
+Lorsqu'un client arrive, il y a en moyenne $\H{\frac{\gl}{\mu - \gl}}$
+  clients qui attendent déjà. Le temps moyen de service d'un client
+  est l'espérance du départ d'un client, qui suit une loi
+  $\H{\mathscr{E}(\mu)}$,
+  donc ce temps moyen de service par client est $\H{\ifrac{\mu}}$.
+  En conséquence, le temps d'attente moyen T avant d'être servi est
+  $\H{T = \ifrac{\mu} \frac{\gl}{\mu - \gl}}$.
+
+{eg}::
+Si l'on a en moyenne 5 clients/h, et si le service dure 8 min, alors on
+  aura $\H{\gl = 5}$ clients/h et
+  $\H{\mu = 60/8 = 7,5}$ clients/h, d'où
+  $\H{\E(L) = \frac{\gl}{\mu - \gl} = \frac{5}{2,5} = 2}$ clients
+  et finalement $\H{T = 2 / \mu = 4 / 15 = 16}$ min. +
+  Remarquons que
+  $\H{\P(L = 0) = 1 - \frac{\gl}{\mu} = 1 - \frac{5}{7,5} = \ifrac{3}}$
+  d'où $\H{\P(L > 0) = \frac{2}{3}}$. Cette dernière valeur est
+  appelée *taux d'occupation*.
+
+== Modèles plus généraux de Files d'Attente
+
+On généralise le modèle précédent : +
+$\H{-}$ Il peut y avoir un nombre quelconque
+  $\H{x \in |[ 1, \infty \]|}$ de guichets. +
+$\H{-}$ Il peut y avoir une taille limite $\H{y \geq x}$ pour la file
+  d'attente : les clients arrivant devant une file pleine se font
+  rejeter. +
+$\H{-}$ Les lois gérant l'arrivée et le départ des clients peuvent être
+  quelconques. Pour nous elles resteront du type exponentiel, noté
+  $\H{M}$. +
+Notation d'un modèle : $\H{A/D/x/y}$ où A et D désignent des types
+  de lois pour l'arrivée et le départ des clients.
+
+[horizontal]
+{eg}::
+$\H{-}$ Le premier modèle était du type $\H{M/M/1/\infty}$. +
+$\H{-}$ Files à plusieurs guichets : $\H{M/M/x/\infty}$. +
+$\H{-}$ Files à plusieurs guichets et avec rejets :
+  $\H{M/M/x/y \ss y \geq x}$. +
+$\H{-}$ Files à plusieurs guichets et avec rejets mais sans attente :
+  $\H{M/M/x/x}$. +
+$\H{-}$ Files sans attente et sans rejets : $\H{M/M/\infty/\infty}$.
+
+== Loi de la Longueur de la File (Cas Général)
+
+{empty} +
+{empty} +
+{empty} +
+{empty}
+
+La méthode de résolution est la même que pour le premier modèle. Au
+  lieu de trouver
+\[
+  \begin{cases}
+  \mu p_1 - \gl p_0 = 0  & \qquad (S^0) \\
+  \mu p_2 - \gl p_1 = \mu p_1 - \gl p_0
+      & \qquad (S^1) \\
+  \mu p_{n+1} - \gl p_n = \mu p_n - \gl p_{n-1}
+     & \qquad (S^n) \ss \all n \gt 0
+  \end{cases}
+\]
+on trouve alors
+\[
+  \begin{cases}
+  \mu_1 p_1 - \gl_0 p_0 = 0  & \qquad (S^0) \\
+  \mu_2 p_2 - \gl_1 p_1 = \mu_1 p_1 - \gl_0 p_0
+      & \qquad (S^1) \\
+  \mu_{n+1} p_{n+1} - \gl_n p_n = \mu_n p_n - \gl_{n+1} p_{n-1}
+      & \qquad (S^n) \ss \all n \gt 0
+  \end{cases}
+\]
+d'où
+\[
+  p_{n+1} = \frac{\gl_n}{\mu_{n+1}} p_n =
+    \frac {\gl_n \dotsb \gl_0}
+      {\mu_{n+1} \dotsb \mu_1} p_0
+\]
+et finalement
+\[
+  \all n > 0 \ss p_n =
+  \frac
+    { \gl_0 \dotsb \gl_{n-1} }
+    { \mu_1 \dotsb \mu_{n} }
+    p_0
+  = \frac
+    { \prod^{n-1}_0 \gl_i }
+    { \prod^{n}_1 \mu_i }
+    p_0
+\]
+
+[horizontal]
+{eg}::
+$\H{-}$ $\H{M/M/1/\infty}$ : un unique {lam} puisque la longueur
+  de la file n'influe pas sur l'arrivée de nouveaux clients, et un
+  unique {mu} car il n'y a qu'un guichet, et car la loi de départ des
+  clients ne dépend pas de la longueur de la file, d'où l'on retrouve
+  $\H{p_n = \left ( \cfrac{\gl}{\mu} \right ) ^n p_0}$. +
+$\H{-}$ $\H{M/M/\infty/\infty}$ : toujours un unique {lam}, mais
+  ici, pour $\H{n}$ clients dans la file, sur les $\H{n}$ guichets
+  actifs, n'importe lequel peut relâcher son client. Les guichets
+  étant indépendants, on doit sommer la valeur {mu}
+  (vitesse d'un guichet) par le nombre de guichets actifs, qui dépend
+  de l'état dans lequel le système se trouve :
+
+{empty} +
+{empty} +
+{empty} +
+Donc :
+$\H{ \all n \geq 0 \ss p_n = \cfrac { \gl^n } { n! \mu^n }  p_0 }$.
+  On reconnaît une loi de Poisson $\H{\mathscr{P}(\gl / \mu)}$, et donc
+  $\H{p_0 = e^{-\gl / \mu}}$.
